@@ -113,7 +113,7 @@ for(let i = 0; i <= urlsFlaD.length; i++ ){
         return par;
     })
    
-    fs.writeFileSync(`/home/pacheco/Área\ de\ Trabalho/FlaNews/noticia${ind}.json`,JSON.stringify(pageContent, null, 1));
+    fs.writeFileSync(`noticia${ind}.json`,JSON.stringify(pageContent, null, 1));
 
     console.log(`Noticia${ind} salvo`);
 
@@ -162,7 +162,7 @@ for(let i = 0; i <= urlsFla.length ; i++ ){
         return par;
     })
    
-    fs.writeFileSync(`/home/pacheco/Área\ de\ Trabalho/FlaNews/noticia${ind}.json`,JSON.stringify(pageContent, null, 1));
+    fs.writeFileSync(`noticia${ind}.json`,JSON.stringify(pageContent, null, 1));
     
     console.log(`Noticia${ind} salvo`);
 
