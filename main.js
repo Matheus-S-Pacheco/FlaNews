@@ -1,5 +1,6 @@
 const puppeteer = require('puppeteer');
 const fs = require('fs');
+const scraping = require('./scrap');
  
 (async () => {
   const browser = await puppeteer.launch({headless : false});
@@ -77,102 +78,34 @@ let ind = 1; //indice para impressão do nome do arquivo
 var pageContent = new Object();
 
 for(let i = 0; i <= urlsFlaD.length; i++ ){
-    if(urlsFlaD != 1){
-        try{
+  
+  pageContent = await scraping(urlsFlaD[i], page,(callback)=>{
+      return callback;
+  }); 
 
-    await page.goto(urlsFlaD[i]);
-
-    await page.waitFor(1000);            
-   
-    pageContent.title1 = await page.evaluate(()=>{
-        const temp = document.querySelector('h1.content-head__title').innerText;
-        return temp;
-    })
-   
-    pageContent.title2 = await page.evaluate(()=>{
-        const temp = document.querySelector('h2').innerText;
-        return temp;
-    })
-   
-    pageContent.pubFrom = await page.evaluate(()=>{
-        const temp = document.querySelector('p.content-publication-data__from').innerText;
-        return temp;
-    })
-   
-    pageContent.pubTime = await page.evaluate(()=>{
-        const temp = document.querySelector('p.content-publication-data__updated').innerText;
-        return temp;
-    })
-   
+  fs.writeFileSync(`./noticias/noticia${ind}.json`,JSON.stringify(pageContent, null, 1));
     
-    pageContent.textCont = await page.evaluate(()=>{
-        var temp = document.querySelectorAll('p.content-text__container');
-        var par = [].map.call(temp, (el)=>{
-            return el.innerText;
-        })
-        return par;
-    })
-   
-    fs.writeFileSync(`./noticias/noticia${ind}.json`,JSON.stringify(pageContent, null, 1));
+  console.log(`Noticia${ind} salvo`);
 
-    console.log(`Noticia${ind} salvo`);
-
-    ind++;
-        }catch(err){
-           
-        }
-}
+  ind++;
     
 }
 
 for(let i = 0; i <= urlsFla.length ; i++ ){
-    if(urlsFla[i] !== 1){
-    try{
-
-      await page.goto(urlsFla[i]);
-
-      await page.waitFor(1000);            
-   
-    pageContent.title1 = await page.evaluate(()=>{
-        const temp = document.querySelector('h1.content-head__title').innerText;
-        return temp;
-    })
-   
-    pageContent.title2 = await page.evaluate(()=>{
-        const temp = document.querySelector('h2').innerText;
-        return temp;
-    })
-   
-    pageContent.pubFrom = await page.evaluate(()=>{
-        const temp = document.querySelector('p.content-publication-data__from').innerText;
-        return temp;
-    })
-   
-    pageContent.pubTime = await page.evaluate(()=>{
-        const temp = document.querySelector('p.content-publication-data__updated').innerText;
-        return temp;
-    })
-   
     
-    pageContent.textCont = await page.evaluate(()=>{
-        var temp = document.querySelectorAll('p.content-text__container');
-        var par = [].map.call(temp, (el)=>{
-            return el.innerText;
-        })
-        return par;
-    })
-   
-    fs.writeFileSync(`./noticias/noticia${ind}.json`,JSON.stringify(pageContent, null, 1));
+  pageContent = await scraping(urlsFla[i], page,(callback)=>{
+      return callback;
+  });  
+
+   if(pageContent != undefined){
+  fs.writeFileSync(`./noticias/noticia${ind}.json`,JSON.stringify(pageContent, null, 1));
     
-    console.log(`Noticia${ind} salvo`);
+  console.log(`Noticia${ind} salvo`);
 
-    ind++;
-  }catch(err){
-   
-  }
-
-  }
-  }
+  ind++;
+   }
+  
+}
 
  console.log('Todas as noticias salvas.');
  await browser.close();
